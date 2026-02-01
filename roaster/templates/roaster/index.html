@@ -1,0 +1,130 @@
+{% extends 'roaster/base.html' %}
+
+{% block extra_style %}
+<style>
+    .upload-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    label {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+    }
+    
+    textarea {
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+    }
+    
+    textarea:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+    
+    textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+    
+    .file-upload {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+    
+    .file-upload input[type="file"] {
+        position: absolute;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+    
+    .file-upload-label {
+        display: block;
+        padding: 30px;
+        background: #f8f9fa;
+        border: 3px dashed #ddd;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .file-upload-label:hover {
+        background: #e9ecef;
+        border-color: #667eea;
+    }
+    
+    .submit-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+    
+    .warning {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 8px;
+        padding: 15px;
+        color: #856404;
+        text-align: center;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>🔥 AI Roast Generator</h1>
+<p class="tagline">Get absolutely destroyed by artificial intelligence</p>
+
+<form method="POST" action="{% url 'upload_and_roast' %}" enctype="multipart/form-data" class="upload-form">
+    {% csrf_token %}
+    <div class="form-group" style="margin-top: 10px;">
+        <label>Upload Image (Optional)</label>
+        <div class="file-upload">
+            <input type="file" name="upload_file" id="upload_file" accept="image/*">
+            <label for="upload_file" class="file-upload-label">
+                📁 Click to upload or drag and drop<br>
+                <small>PNG, JPG, GIF, WebP</small>
+            </label>
+        </div>
+    </div>
+    
+    <div class="form-group" style="margin-top: 10px;">
+        <label for="text_content">Or Paste Text (Optional)</label>
+        <textarea name="text_content" id="text_content" placeholder="Paste your code, resume text, or anything else here..."></textarea>
+    </div>
+    
+    <div class="warning" style="margin-top: 10px;">
+        ⚠️ Warning: Prepare your ego. This AI shows no mercy.
+    </div>
+    
+    <button type="submit" class="submit-btn" style="margin-top: 10px;">🎤 ROAST ME</button>
+</form>
+{% endblock %}

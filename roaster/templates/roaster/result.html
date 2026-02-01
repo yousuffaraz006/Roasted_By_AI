@@ -1,0 +1,102 @@
+{% extends 'roaster/base.html' %}
+
+{% block extra_style %}
+<style>
+    .result-container {
+        text-align: center;
+    }
+    
+    .submission-preview {
+        margin: 20px 0;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+    
+    .submission-preview img {
+        max-width: 100%;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+    
+    .roast-box {
+        background: #fff3cd;
+        border: 3px solid #ffc107;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+        font-size: 1.1em;
+        line-height: 1.6;
+        color: #333;
+        white-space: pre-wrap;
+    }
+    
+    .roast-icon {
+        font-size: 3em;
+        margin-bottom: 15px;
+    }
+    
+    .share-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+    }
+    
+    .btn {
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: transform 0.2s;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="result-container">
+    <h1>🔥 You've Been Roasted!</h1>
+    <p class="tagline">Here's what the AI thinks of you...</p>
+    
+    {% if submission.image %}
+    <div class="submission-preview">
+        <strong>Your Submission:</strong>
+        <br>
+        <img src="{{ submission.image.url }}" alt="Submitted image">
+    </div>
+    {% endif %}
+    
+    <div class="roast-box">
+        <div class="roast-icon">🎤</div>
+        {{ submission.roast_result }}
+    </div>
+    
+    <div class="share-buttons">
+        <a href="{% url 'index' %}" class="btn btn-primary">Get Roasted Again</a>
+        <button onclick="copyRoast()" class="btn btn-secondary">📋 Copy Roast</button>
+    </div>
+</div>
+
+<script>
+function copyRoast() {
+    const roastText = `{{ submission.roast_result|escapejs }}`;
+    navigator.clipboard.writeText(roastText).then(() => {
+        alert('Roast copied! Share your humiliation with the world! 🔥');
+    });
+}
+</script>
+{% endblock %}
