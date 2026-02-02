@@ -11,7 +11,13 @@ def index(request):
 def upload_and_roast(request):
     if request.method == 'POST':
         uploaded_file = request.FILES.get('upload_file')
-        text_content = request.POST.get('text_content', '')
+        text_content = request.POST.get('text_content', '').strip()
+        
+        # Backend validation: at least one must be provided
+        if not uploaded_file and not text_content:
+            return render(request, 'roaster/index.html', {
+                'error': 'Please provide either an image or text content to roast!'
+            })
         
         # Create submission object (submission_type will be auto-detected by AI)
         submission = RoastSubmission.objects.create(
@@ -60,13 +66,19 @@ def generate_roast(submission):
         }
         media_type = media_type_map.get(file_extension, 'image/jpeg')
         
+        # Check if text was also provided (use as insight)
+        if submission.text_content:
+            prompt_text = f"{persona_prompt}\n\nAnalyze this image and roast it mercilessly based on what you see.\n\nAdditional context/insight from user: {submission.text_content}\n\nUse this context to make your roast even more devastating and accurate."
+        else:
+            prompt_text = f"{persona_prompt}\n\nAnalyze this image and roast it mercilessly based on what you see."
+        
         messages_content = [
             {
                 "role": "user",
                 "content": [
                     {
                         "type": "text",
-                        "text": f"{persona_prompt}\n\nAnalyze this image and roast it mercilessly based on what you see."
+                        "text": prompt_text
                     },
                     {
                         "type": "image_url",

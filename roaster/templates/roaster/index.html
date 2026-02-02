@@ -103,6 +103,12 @@
 <h1>🔥 AI Roast Generator</h1>
 <p class="tagline">Get absolutely destroyed by artificial intelligence</p>
 
+{% if error %}
+<div class="warning" style="margin-bottom: 20px;">
+    ⚠️ {{ error }}
+</div>
+{% endif %}
+
 <form method="POST" action="{% url 'upload_and_roast' %}" enctype="multipart/form-data" class="upload-form">
     {% csrf_token %}
     <div class="form-group" style="margin-top: 10px;">
@@ -111,7 +117,7 @@
             <input type="file" name="upload_file" id="upload_file" accept="image/*">
             <label for="upload_file" class="file-upload-label">
                 📁 Click to upload or drag and drop<br>
-                <small>PNG, JPG, GIF, WebP</small>
+                <small>PNG, JPG</small>
             </label>
         </div>
     </div>
@@ -127,4 +133,19 @@
     
     <button type="submit" class="submit-btn" style="margin-top: 10px;">🎤 ROAST ME</button>
 </form>
+<script>
+    document.querySelector('.upload-form').addEventListener('submit', function(e) {
+        const fileInput = document.getElementById('upload_file');
+        const textInput = document.getElementById('text_content');
+        
+        const hasFile = fileInput.files && fileInput.files.length > 0;
+        const hasText = textInput.value.trim().length > 0;
+        
+        if (!hasFile && !hasText) {
+            e.preventDefault();
+            alert('⚠️ Please provide either an image or text content to roast!');
+            return false;
+        }
+    });
+</script>
 {% endblock %}
