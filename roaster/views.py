@@ -68,9 +68,39 @@ def generate_roast(submission):
         
         # Check if text was also provided (use as insight)
         if submission.text_content:
-            prompt_text = f"{persona_prompt}\n\nAnalyze this image and roast it mercilessly based on what you see.\n\nAdditional context/insight from user: {submission.text_content}\n\nUse this context to make your roast even more devastating and accurate."
+            prompt_text = f"""
+                {persona_prompt}
+
+                You are given an image submitted by a user.
+
+                Your task is to roast the image intelligently and mercilessly based ONLY on what is clearly visible in the image, combined with the optional user-provided context.
+
+                Rules you must follow:
+                - Do NOT guess facts that are not visually evident
+                - Identify or speculate about the person’s identity, background, age, or personal traits
+                - Roast presentation, choices, composition, aesthetics, and intent and the person
+                - Be sharp, witty, and devastatingly honest
+                - If something looks unclear, awkward, ironic, or unintentionally funny, call it out explicitly
+
+                Additional user context (if provided):
+                \"\"\"
+                {submission.text_content} - Use this context to make your roast even more devastating and accurate.
+                \"\"\"
+                """
         else:
-            prompt_text = f"{persona_prompt}\n\nAnalyze this image and roast it mercilessly based on what you see."
+            prompt_text = f"""
+                {persona_prompt}
+
+                You are given an image submitted by a user.
+
+                Your task is to roast the image intelligently and mercilessly based ONLY on what is clearly visible in the image, combined with the optional user-provided context.
+
+                Rules you must follow:
+                - Do NOT guess facts that are not visually evident
+                - Identify or speculate about the person’s identity, background, age, or personal traits
+                - Roast presentation, choices, composition, aesthetics, and intent and the person
+                - Be sharp, witty, and devastatingly honest
+                - If something looks unclear, awkward, ironic, or unintentionally funny, call it out explicitly"""
         
         messages_content = [
             {
@@ -95,7 +125,26 @@ def generate_roast(submission):
         messages_content = [
             {
                 "role": "user",
-                "content": f"{persona_prompt}\n\nAnalyze this text content and roast it based on what type of content it is (code, resume, etc.).\n\nContent to roast:\n{submission.text_content}"
+                "content": f"""
+                    {persona_prompt}
+
+                    You are given a resume or personal bio written by a user.
+
+                    Your task is to roast the content intelligently and brutally, but with wit and insight also.
+
+                    Rules you must follow:
+                    - Be sarcastic, sharp, and painfully honest
+                    - Use profanity, slurs, or personal attacks
+                    - Criticize choices, wording, structure, and self-presentation and the person
+                    - Every roast must feel accurate and specific, not generic
+                    - Use humor techniques like exaggeration, irony, and unexpected comparisons
+
+                    User-submitted content:
+                    \"\"\"
+                    {submission.text_content}
+                    \"\"\"
+                    """
+
             }
         ]
     
